@@ -35,6 +35,22 @@ let currentWeatherData = {
     sunset: null
 };
 
+// Firebase Konfiguration
+const firebaseConfig = {
+    apiKey: "AIzaSyAs8iVE5waIPLsmLLHB-VlMiq5GKo3lc70",
+    authDomain: "checkliste-1f0ab.firebaseapp.com",
+    projectId: "checkliste-1f0ab",
+    storageBucket: "checkliste-1f0ab.firebasestorage.app",
+    messagingSenderId: "680963316822",
+    appId: "1:680963316822:web:fe174aa5bba13ea498eff7",
+    measurementId: "G-J3PS0MYHG4"
+};
+
+// Zusätzliche Konstanten (wie angefordert)
+const APP_SECRET = "Checkliste_Secure_Pepper_2024!_#Safe"; 
+const RECAPTCHA_SITE_KEY = "6LeIFUksAAAAAAwNQsk8ZnontP41WS3nHLsrAjg7";
+
+
 function getLocation() {
     const statusElement = document.getElementById('location-status');
     const errorElement = document.getElementById('error-msg');
@@ -791,6 +807,14 @@ window.onload = () => {
     createDataSourceHint();
     getLocation();
     startTime();
+    
+    // Firebase initialisieren
+    if (typeof firebase !== 'undefined') {
+        firebase.initializeApp(firebaseConfig);
+        initAuthObserver();
+    } else {
+        console.error("Firebase SDK nicht geladen.");
+    }
 };
 
 // Hinweis zur Datenquelle erstellen
@@ -813,10 +837,85 @@ function startTime() {
     setTimeout(startTime, 1000);
 }
 
-// Debug Menü umschalten
+// --- AUTHENTIFIZIERUNG & DEBUG MENÜ ---
+
+let authUser = null;
+
+function initAuthObserver() {
+    firebase.auth().onAuthStateChanged((user) => {
+        authUser = user;
+        const adminBtn = document.getElementById('admin-btn');
+        const icon = adminBtn ? adminBtn.querySelector('i') : null;
+        
+        if (user) {
+            // Eingeloggt: Icon zu "offen" ändern und grün färben
+            if(icon) {
+                icon.className = "fa-solid fa-unlock";
+                icon.style.color = "#4ade80";
+            }
+            if(adminBtn) adminBtn.title = "Admin Menü";
+        } else {
+            // Ausgeloggt: Icon zu "Schloss" ändern
+            if(icon) {
+                icon.className = "fa-solid fa-lock";
+                icon.style.color = "";
+            }
+            if(adminBtn) adminBtn.title = "Admin Login";
+            document.getElementById('debug-menu').classList.add('hidden');
+        }
+    });
+}
+
+// Wird aufgerufen wenn man auf das Zahnrad klickt
+function handleSettingsClick() {
+    if (authUser) {
+        // Wenn eingeloggt -> Menü öffnen/schließen
+        toggleDebugMenu();
+    } else {
+        // Wenn nicht eingeloggt -> Login Fenster zeigen
+        showLoginModal();
+    }
+}
+
 function toggleDebugMenu() {
     const menu = document.getElementById('debug-menu');
     menu.classList.toggle('hidden');
+}
+
+function showLoginModal() {
+    document.getElementById('login-modal').classList.remove('hidden');
+    document.getElementById('login-error').textContent = '';
+    document.getElementById('login-email').focus();
+}
+
+function closeLoginModal() {
+    document.getElementById('login-modal').classList.add('hidden');
+}
+
+function performLogin() {
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    const errorText = document.getElementById('login-error');
+
+    if (!email || !password) {
+        errorText.textContent = "Bitte Email und Passwort eingeben.";
+        return;
+    }
+
+    errorText.textContent = "Anmeldung läuft...";
+
+    firebase.auth().signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+            closeLoginModal();
+            toggleDebugMenu(); // Menü direkt öffnen
+        })
+        .catch((error) => {
+            errorText.textContent = "Fehler: " + error.message;
+        });
+}
+
+function logout() {
+    firebase.auth().signOut();
 }
 
 // Landschaftsmodus umschalten
