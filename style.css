@@ -18,6 +18,7 @@ body {
     margin: 0;
     overflow: hidden; /* Wichtig für Animationen */
     color: var(--text-primary);
+    position: relative; /* Wichtig für absolute Positionierung der Stadt am Ende */
 }
 
 /* Hintergrund Layer */
@@ -27,7 +28,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -5;
+    z-index: -10; /* Ganz hinten */
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     transition: background 1s ease;
 }
@@ -43,13 +44,23 @@ body {
     transition: opacity 1s ease, filter 1s ease;
 }
 
-.particles-layer {
-    position: absolute;
+.stars-layer {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -2;
+    z-index: -9; /* Vor dem Hintergrund, aber hinter Stadt (-3) und Celestial (-4) */
+    pointer-events: none;
+}
+
+.particles-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
     pointer-events: none;
     overflow: hidden;
 }
@@ -67,12 +78,23 @@ body {
     max-width: 350px;
     transition: transform 0.3s ease;
     animation: floatCard 6s ease-in-out infinite;
+    position: relative; /* Damit die Uhrzeit absolut darin positioniert werden kann */
 }
 
 @keyframes floatCard {
     0% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
     100% { transform: translateY(0px); }
+}
+
+/* UHRZEIT ANZEIGE */
+.current-time {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
 }
 
 .header h1 {
@@ -289,6 +311,13 @@ body {
     margin-bottom: 5px;
 }
 
+.controls-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
 .refresh-btn {
     background-color: var(--accent-color);
     color: white;
@@ -300,18 +329,47 @@ body {
     transition: background 0.3s;
     backdrop-filter: blur(5px);
     font-weight: 600;
+    flex-grow: 1; /* Nimmt den meisten Platz ein */
 }
 
-.test-btn {
+.icon-btn {
     background-color: rgba(255, 255, 255, 0.2);
     color: white;
     border: 1px solid rgba(255,255,255,0.4);
-    padding: 10px 15px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     cursor: pointer;
     font-size: 1rem;
-    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: background 0.3s;
+}
+
+.icon-btn:hover, .test-btn:hover {
+    background-color: var(--accent-hover);
+}
+
+.debug-menu {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    animation: fadeIn 0.3s ease;
+}
+
+.test-btn {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.9rem;
 }
 
 .refresh-btn:hover {
@@ -322,12 +380,46 @@ body {
     display: none;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .error {
     color: #ff6b6b;
     background: rgba(0,0,0,0.3);
     padding: 10px;
     border-radius: 8px;
     margin: 1rem 0;
+}
+
+/* LANDSCHAFTS MODUS */
+body.landscape-mode .weather-card {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.9);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+body.landscape-mode .data-source {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.restore-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.4);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    font-weight: 600;
+    transition: background 0.3s;
 }
 
 /* --- THEMES & ANIMATIONS --- */
@@ -1028,13 +1120,14 @@ body {
     .weather-card {
         width: 90%;
         max-width: none;
-        margin-bottom: 200px; /* Platz für das Kunstwerk unten */
+        margin-bottom: 230px; /* Mehr Platz zum Scrollen */
         padding: 1.5rem;
         backdrop-filter: blur(20px); /* Stärkerer Blur für Lesbarkeit */
-        background: rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.25); /* Weniger transparent gegen "Merging" */
         border: 1px solid rgba(255, 255, 255, 0.15);
         box-shadow: 0 10px 40px rgba(0,0,0,0.2);
     }
+    /* Im Landscape Mode auf Mobile auch ausblenden */
 
     /* Schriftgrößen anpassen */
     .temp-container {
@@ -1068,7 +1161,7 @@ body {
 
     /* Das Stadtbild als festes Kunstwerk am Boden */
     .city-scape {
-        position: fixed; /* Fixiert am Viewport-Boden */
+        position: absolute; /* Scrollt mit weg / ist am Ende der Seite */
         bottom: 0;
         left: 0;
         height: 180px; /* Kompakter für Mobile */
@@ -1103,15 +1196,16 @@ body {
         width: 45px;
         height: 45px;
         top: auto !important;
-        bottom: 140px !important; /* Höher gesetzt, damit sie nicht vom Berg verdeckt wird */
-        right: 8% !important;
+        bottom: 180px !important; /* Deutlich höher, damit sie frei über dem Berg steht */
+        right: 5% !important; /* Weiter am Rand */
         left: auto !important; /* Überschreibt JS-Animation auf Mobile */
     }
     .moon {
         font-size: 40px;
         top: auto !important;
-        bottom: 140px !important;
-        right: 8% !important;
+        bottom: 180px !important;
+        right: 5% !important;
+        animation: none !important; /* Kein Wackeln (Hoch/Runter) auf Mobile */
     }
 
     /* Datenquelle oben rechts, klein */

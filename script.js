@@ -310,11 +310,13 @@ function setTheme(code, isDay, moonPhase = 0.5, sunriseStr = null, sunsetStr = n
     const particles = document.getElementById('particles');
     const celestial = document.getElementById('celestial-container');
     const city = document.getElementById('city-scape');
+    const stars = document.getElementById('stars');
     
     // Reset Klassen, Partikel und Himmelskörper
     body.className = '';
     particles.innerHTML = '';
     celestial.innerHTML = '';
+    if(stars) stars.innerHTML = '';
 
     // Sichtbarkeit berechnen (bei schlechtem Wetter weniger sichtbar)
     let celestialOpacity = 1;
@@ -590,7 +592,7 @@ function createSnow(amount) {
 }
 
 function createStars(amount) {
-    const container = document.getElementById('particles');
+    const container = document.getElementById('stars');
     for(let i=0; i<amount; i++) {
         const star = document.createElement('div');
         star.className = 'star';
@@ -603,7 +605,7 @@ function createStars(amount) {
 }
 
 function createShootingStars() {
-    const container = document.getElementById('particles');
+    const container = document.getElementById('stars');
     // Eine Sternschnuppe, die ab und zu vorbeifliegt
     const star = document.createElement('div');
     star.className = 'shooting-star';
@@ -788,6 +790,7 @@ window.onload = () => {
     createCityScape();
     createDataSourceHint();
     getLocation();
+    startTime();
 };
 
 // Hinweis zur Datenquelle erstellen
@@ -796,4 +799,35 @@ function createDataSourceHint() {
     hint.className = 'data-source';
     hint.innerHTML = 'Wetterdaten von <a href="https://open-meteo.com/" target="_blank">Open-Meteo.com</a>';
     document.body.appendChild(hint);
+}
+
+// Uhrzeit aktualisieren
+function startTime() {
+    const today = new Date();
+    const h = today.getHours().toString().padStart(2, '0');
+    const m = today.getMinutes().toString().padStart(2, '0');
+    const timeElement = document.getElementById('current-time');
+    if (timeElement) {
+        timeElement.textContent = `${h}:${m}`;
+    }
+    setTimeout(startTime, 1000);
+}
+
+// Debug Menü umschalten
+function toggleDebugMenu() {
+    const menu = document.getElementById('debug-menu');
+    menu.classList.toggle('hidden');
+}
+
+// Landschaftsmodus umschalten
+function toggleLandscapeMode() {
+    document.body.classList.toggle('landscape-mode');
+    
+    const restoreBtn = document.getElementById('restore-ui-btn');
+    // Button anzeigen wenn Landscape Mode aktiv ist
+    if (document.body.classList.contains('landscape-mode')) {
+        restoreBtn.classList.remove('hidden');
+    } else {
+        restoreBtn.classList.add('hidden');
+    }
 }

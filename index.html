@@ -10,6 +10,7 @@
 <body>
 
     <div id="app-background" class="background-layer"></div>
+    <div id="stars" class="stars-layer"></div>
     <div id="celestial-container" class="celestial-layer"></div>
     
     <div id="city-scape" class="city-scape">
@@ -22,7 +23,10 @@
 
     <div id="particles" class="particles-layer"></div>
 
+    <button id="restore-ui-btn" class="restore-btn hidden" onclick="toggleLandscapeMode()"><i class="fa-solid fa-arrow-left"></i> Zurück</button>
+
     <div class="weather-card">
+        <div id="current-time" class="current-time">--:--</div>
         <div class="header">
             <h1>Aktuelles Wetter</h1>
             <p id="location-status">Standort wird ermittelt...</p>
@@ -64,10 +68,17 @@
             Standortzugriff verweigert oder nicht verfügbar.
         </div>
 
-        <button onclick="getLocation()" class="refresh-btn">Aktualisieren</button>
-        <button onclick="testScenarios()" class="test-btn" title="Design testen"><i class="fa-solid fa-flask"></i></button>
-        <button onclick="forceDay()" class="test-btn" title="Tag simulieren"><i class="fa-solid fa-sun"></i></button>
-        <button onclick="forceNight()" class="test-btn" title="Nacht simulieren"><i class="fa-solid fa-moon"></i></button>
+        <div class="controls-row">
+            <button onclick="getLocation()" class="refresh-btn">Aktualisieren</button>
+            <button onclick="toggleLandscapeMode()" class="icon-btn" title="Nur Landschaft ansehen"><i class="fa-solid fa-eye"></i></button>
+            <button onclick="toggleDebugMenu()" class="icon-btn" title="Einstellungen"><i class="fa-solid fa-gear"></i></button>
+        </div>
+
+        <div id="debug-menu" class="debug-menu hidden">
+            <button onclick="testScenarios()" class="test-btn" title="Szenario wechseln"><i class="fa-solid fa-flask"></i></button>
+            <button onclick="forceDay()" class="test-btn" title="Tag"><i class="fa-solid fa-sun"></i></button>
+            <button onclick="forceNight()" class="test-btn" title="Nacht"><i class="fa-solid fa-moon"></i></button>
+        </div>
     </div>
 
     <script src="script.js"></script>
