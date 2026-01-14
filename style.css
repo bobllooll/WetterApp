@@ -1,0 +1,1138 @@
+:root {
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.8);
+    --accent-color: rgba(255, 255, 255, 0.3);
+    --accent-hover: rgba(255, 255, 255, 0.5);
+    --card-bg: rgba(255, 255, 255, 0.15);
+    --card-border: rgba(255, 255, 255, 0.2);
+    --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #333; /* Fallback */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden; /* Wichtig für Animationen */
+    color: var(--text-primary);
+}
+
+/* Hintergrund Layer */
+.background-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -5;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transition: background 1s ease;
+}
+
+.celestial-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -4;
+    pointer-events: none;
+    transition: opacity 1s ease, filter 1s ease;
+}
+
+.particles-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.weather-card {
+    background-color: var(--card-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--card-border);
+    padding: 1.5rem;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    width: 90%;
+    max-width: 350px;
+    transition: transform 0.3s ease;
+    animation: floatCard 6s ease-in-out infinite;
+}
+
+@keyframes floatCard {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    color: var(--text-primary);
+}
+
+#location-status {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-top: 5px;
+    font-weight: 300;
+}
+
+.weather-info {
+    margin: 1rem 0;
+}
+
+.main-icon {
+    font-size: 3.5rem;
+    color: #fff;
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
+    margin-bottom: 10px;
+    animation: pulseIcon 3s infinite alternate;
+}
+
+@keyframes pulseIcon {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
+}
+
+.temp-container {
+    font-size: 3.5rem;
+    font-weight: 700;
+    text-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    color: var(--text-primary);
+}
+
+.unit {
+    font-size: 1.5rem;
+    vertical-align: top;
+}
+
+.description {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-top: -10px;
+    margin-bottom: 20px;
+    text-transform: capitalize;
+    font-weight: 500;
+}
+
+.details {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* --- WINDMILL ANIMATION --- */
+.windmill-container {
+    position: relative;
+    width: 40px;
+    height: 50px;
+}
+
+.pole {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 25px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.1));
+    border-radius: 4px;
+    display: none; /* Nur Rotorblatt anzeigen, Mast ausblenden */
+}
+
+.blades {
+    position: absolute;
+    top: 50%; /* Mittig im Container */
+    left: 50%;
+    width: 0;
+    height: 0;
+    z-index: 2;
+    animation: spin 5s linear infinite; /* Standard Geschwindigkeit */
+}
+
+.hub {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(255,255,255,0.9);
+    z-index: 3;
+}
+
+.blade {
+    position: absolute;
+    bottom: 0;
+    left: -3px;
+    width: 6px;
+    height: 24px;
+    background: linear-gradient(to top, #ffffff 0%, rgba(255,255,255,0.4) 100%);
+    border-radius: 50% 50% 10% 10%;
+    transform-origin: bottom center;
+    box-shadow: 0 0 5px rgba(255,255,255,0.3);
+}
+
+.blade:nth-child(1) { transform: rotate(0deg); }
+.blade:nth-child(2) { transform: rotate(120deg); }
+.blade:nth-child(3) { transform: rotate(240deg); }
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* -------------------------- */
+
+/* STÜNDLICHER VERLAUF */
+.hourly-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    margin: 0 0 20px 0;
+    padding-bottom: 5px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    /* Scrollbar verstecken für cleanen Look */
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+}
+
+.hourly-container::-webkit-scrollbar { 
+    display: none; 
+}
+
+/* Diagramm Wrapper */
+.chart-wrapper {
+    position: relative;
+    /* Breite wird per JS gesetzt */
+}
+
+.chart-label {
+    position: absolute;
+    transform: translateX(-50%);
+    text-align: center;
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    width: 60px; /* Klickbereich */
+}
+
+.chart-label.time {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    font-weight: 300;
+}
+
+.chart-label.icon {
+    font-size: 1.4rem;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.forecast-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 8px;
+    overflow-x: auto;
+}
+
+.forecast-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px;
+    border-radius: 8px;
+    flex: 1;
+    min-width: 50px;
+    font-size: 0.8rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: background 0.3s;
+}
+
+.forecast-item:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.forecast-icon {
+    font-size: 1.5rem;
+    margin: 5px 0;
+    color: #fff;
+}
+
+.forecast-day {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.refresh-btn {
+    background-color: var(--accent-color);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.4);
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s;
+    backdrop-filter: blur(5px);
+    font-weight: 600;
+}
+
+.test-btn {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.4);
+    padding: 10px 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-left: 10px;
+    transition: background 0.3s;
+}
+
+.refresh-btn:hover {
+    background-color: var(--accent-hover);
+}
+
+.hidden {
+    display: none;
+}
+
+.error {
+    color: #ff6b6b;
+    background: rgba(0,0,0,0.3);
+    padding: 10px;
+    border-radius: 8px;
+    margin: 1rem 0;
+}
+
+/* --- THEMES & ANIMATIONS --- */
+
+/* Sunny / Clear Day */
+.theme-sunny .background-layer {
+    background: linear-gradient(160deg, #4facfe 0%, #00f2fe 100%);
+}
+
+/* Night / Clear Night */
+.theme-night .background-layer {
+    background: linear-gradient(160deg, #09203f 0%, #537895 100%);
+}
+
+/* Cloudy */
+.theme-cloudy .background-layer {
+    background: linear-gradient(160deg, #bdc3c7 0%, #2c3e50 100%);
+}
+/* Dunkle Wolken für Nacht/Stark bewölkt */
+.theme-night.theme-cloudy .background-layer {
+    background: linear-gradient(160deg, #232526 0%, #414345 100%);
+}
+
+/* Rain */
+.theme-rain .background-layer {
+    background: linear-gradient(160deg, #3a6073 0%, #16222a 100%);
+}
+.theme-night.theme-rain .background-layer {
+    background: linear-gradient(160deg, #000000 0%, #434343 100%);
+}
+
+/* Storm */
+.theme-storm .background-layer {
+    background: linear-gradient(160deg, #141E30 0%, #243B55 100%);
+}
+
+/* Snow */
+.theme-snow .background-layer {
+    background: linear-gradient(160deg, #83a4d4 0%, #b6fbff 100%);
+}
+.theme-night.theme-snow .background-layer {
+    background: linear-gradient(160deg, #1c2834 0%, #3b5368 100%);
+}
+
+/* Fog */
+.theme-fog .background-layer {
+    background: linear-gradient(160deg, #606c88 0%, #3f4c6b 100%);
+}
+
+/* Dawn (Morgenrot) */
+.theme-dawn .background-layer {
+    background: linear-gradient(160deg, #ff9966 0%, #ff5e62 100%);
+}
+
+/* Dusk (Abendrot) */
+.theme-dusk .background-layer {
+    background: linear-gradient(160deg, #2b5876 0%, #4e4376 100%);
+}
+
+/* --- PARTIKEL ANIMATIONEN --- */
+
+/* Regen Tropfen */
+.rain-drop {
+    position: absolute;
+    /* Verlauf für Motion-Blur Effekt */
+    background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.8));
+    width: 1px;
+    top: -50px;
+    animation: fall linear infinite;
+    will-change: transform;
+}
+
+/* Schnee Flocken */
+.snowflake {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    top: -10px;
+    animation: fall linear infinite, sway ease-in-out infinite alternate;
+    box-shadow: 0 0 3px rgba(255,255,255,0.4); /* Leichter Glow */
+    will-change: transform;
+}
+
+/* Sterne */
+.star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 2s infinite ease-in-out;
+}
+
+/* Sternschnuppen */
+.shooting-star {
+    position: absolute;
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(255,255,255,1), rgba(255,255,255,0));
+    transform: rotate(-45deg);
+    animation: shoot 3s ease-in-out infinite;
+    opacity: 0;
+}
+
+/* Wolken (vereinfacht als Kreise) */
+.cloud-shape {
+    position: absolute;
+    background: rgba(255,255,255,0.4);
+    border-radius: 50%;
+    filter: blur(20px);
+    animation: floatCloud linear infinite;
+}
+
+/* Dunkle Wolken für Nacht */
+.theme-night .cloud-shape {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Nebel Schwaden */
+.fog-shape {
+    position: absolute;
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%);
+    width: 150vw;
+    filter: blur(20px);
+    animation: fogMove linear infinite;
+    left: -50vw;
+}
+
+@keyframes fall {
+    to { transform: translateY(120vh); }
+}
+
+@keyframes sway {
+    0% { margin-left: -15px; }
+    100% { margin-left: 15px; }
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes shoot {
+    0% { transform: translateX(0) translateY(0) rotate(-45deg); opacity: 1; }
+    20% { transform: translateX(-200px) translateY(200px) rotate(-45deg); opacity: 0; }
+    100% { transform: translateX(-200px) translateY(200px) rotate(-45deg); opacity: 0; }
+}
+
+@keyframes floatCloud {
+    from { transform: translateX(-100px); }
+    to { transform: translateX(120vw); }
+}
+
+@keyframes fogMove {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(50vw); }
+}
+
+/* Blitz Effekt */
+.flash {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: white;
+    opacity: 0;
+    z-index: 1;
+    pointer-events: none;
+    animation: lightning 5s infinite;
+}
+
+@keyframes lightning {
+    0%, 95% { opacity: 0; }
+    96% { opacity: 0.3; }
+    97% { opacity: 0; }
+    98% { opacity: 0.2; }
+    100% { opacity: 0; }
+}
+
+/* --- HIMMELSKÖRPER (Sonne & Mond) --- */
+
+.sun {
+    position: absolute;
+    top: 10%;
+    right: 15%;
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(to bottom right, #ffeb3b, #fbc02d);
+    border-radius: 50%;
+    box-shadow: 0 0 40px rgba(255, 235, 59, 0.6), 0 0 80px rgba(255, 193, 7, 0.4);
+    animation: sunGlow 5s infinite alternate ease-in-out;
+    transition: left 1s linear, bottom 1s linear; /* Weiche Bewegung */
+}
+
+/* Sonne am Morgen (rötlicher) */
+.theme-dawn .sun {
+    background: linear-gradient(to bottom right, #ff7e5f, #feb47b);
+    box-shadow: 0 0 40px rgba(255, 126, 95, 0.6), 0 0 80px rgba(254, 180, 123, 0.4);
+}
+
+/* Sonne am Abend (dunkleres Rot/Orange) */
+.theme-dusk .sun {
+    background: linear-gradient(to bottom right, #fd746c, #ff9068);
+    box-shadow: 0 0 40px rgba(253, 116, 108, 0.6), 0 0 80px rgba(255, 144, 104, 0.4);
+}
+
+@keyframes sunGlow {
+    from { transform: scale(1); box-shadow: 0 0 40px rgba(255, 235, 59, 0.6), 0 0 80px rgba(255, 193, 7, 0.4); }
+    to { transform: scale(1.1); box-shadow: 0 0 70px rgba(255, 235, 59, 0.8), 0 0 120px rgba(255, 193, 7, 0.6); }
+}
+
+.moon {
+    position: absolute;
+    top: 10%;
+    right: 15%;
+    font-size: 100px;
+    line-height: 1;
+    /* Trick: Emoji entfärben und hell leuchten lassen */
+    filter: grayscale(100%) brightness(200%) drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
+    animation: moonFloat 6s ease-in-out infinite alternate;
+    opacity: 0.9;
+    user-select: none;
+}
+
+@keyframes moonFloat {
+    from { transform: translateY(0); }
+    to { transform: translateY(-10px); }
+}
+
+/* --- CITY SCAPE --- */
+
+.city-scape {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 250px; /* Etwas höher für bessere Komposition */
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: -3;
+    pointer-events: none;
+    padding-bottom: 0;
+    transition: filter 1s ease, opacity 1s ease, transform 1s ease;
+    overflow: hidden; /* Damit der Berg nicht rausragt */
+}
+
+.buildings-layer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 15px;
+    position: relative;
+    z-index: 2;
+    bottom: 40px; /* Stehen auf der Straße (Höhe der Straße) */
+}
+
+.house {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease;
+    transform-origin: bottom;
+}
+
+.house-body {
+    width: var(--h-width);
+    height: var(--h-height);
+    background: var(--h-color);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    border-radius: 0 0 8px 8px; /* Unten abgerundet */
+    box-shadow: inset -4px 0 10px rgba(0,0,0,0.1); /* Leichte Tiefe */
+    z-index: 2;
+}
+
+.door {
+    width: 20px;
+    height: 28px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 4px 4px 0 0;
+}
+
+.window {
+    position: absolute;
+    top: 12px;
+    width: 24px;
+    height: 24px;
+    background: #fff;
+    border-radius: 50%; /* Runde Fenster sind süßer */
+    box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1);
+    transition: background 0.5s, box-shadow 0.5s, border-radius 0.3s;
+}
+
+/* Eckige Fenster für Flachdach-Häuser für Variation */
+.house.flat .window {
+    border-radius: 6px;
+}
+
+/* Lichter an bei Nacht */
+.lights-on .window {
+    background: #ffeb3b;
+    box-shadow: 0 0 15px #ffeb3b;
+}
+
+/* DACH FORMEN */
+.roof {
+    position: relative;
+    width: calc(var(--h-width) + 10px);
+    background: #2d3436; /* Dunkles Dach für Kontrast */
+    z-index: 3;
+    border-radius: 4px;
+    transition: all 0.5s ease;
+}
+
+/* Giebeldach (Dreieck) */
+.house.gable .roof {
+    height: 40px;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    border-radius: 0;
+}
+
+/* Flachdach */
+.house.flat .roof {
+    height: 12px;
+    border-radius: 6px;
+}
+
+/* Pultdach (Schräg) */
+.house.slant .roof {
+    height: 30px;
+    clip-path: polygon(0% 100%, 100% 0%, 100% 100%);
+    border-radius: 0;
+}
+
+/* SCHORNSTEIN & RAUCH */
+.chimney {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    width: 6px;
+    height: 20px;
+    background: #455a64;
+    z-index: 1; /* Hinter dem Dach (z-index 3) und Körper (2), ragt oben raus */
+    border-radius: 2px;
+}
+
+.smoke {
+    position: absolute;
+    bottom: 100%; /* Startet oben am Schornstein */
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    transform: translateX(-50%) scale(0.5);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Rauch Animation nur wenn es kalt ist */
+.theme-cold .smoke {
+    animation: smokeRise 5s infinite ease-out;
+}
+
+/* STRASSE & LAMPEN */
+.street {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 45px;
+    background: #37474f;
+    border-top: 4px solid #546e7a; /* Bordstein */
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Straßenmarkierung (Mittelstreifen) */
+.street::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: repeating-linear-gradient(90deg, rgba(255,255,255,0.4) 0, rgba(255,255,255,0.4) 30px, transparent 30px, transparent 60px);
+    transform: translateY(-50%);
+    box-shadow: 0 0 2px rgba(0,0,0,0.5);
+}
+
+.street-lamp {
+    position: relative;
+    width: 3px;
+    height: 100px; /* Etwas höher und schlanker */
+    background: #263238;
+    margin-bottom: -5px; /* Leicht in den Boden */
+    border-radius: 2px;
+    z-index: 3;
+}
+/* Lampenkopf */
+.street-lamp::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -4px;
+    width: 12px;
+    height: 6px; /* Flacherer, moderner Kopf */
+    background: #263238;
+    border-radius: 4px 4px 0 0;
+}
+/* Lichtschein auf dem Boden (Neu) */
+.street-lamp::before {
+    content: '';
+    position: absolute;
+    bottom: -5px; /* Auf der Straße */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 8px;
+    background: radial-gradient(ellipse at center, rgba(255, 235, 59, 0.5) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+/* Lichtkegel (Volumetrisches Licht) */
+.light-cone {
+    position: absolute;
+    top: 6px; /* Unter dem Lampenkopf */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 90px;
+    background: linear-gradient(to bottom, rgba(255, 235, 59, 0.2) 0%, transparent 80%);
+    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+/* Das Licht */
+.lamp-light {
+    position: absolute;
+    top: 6px; /* Unter dem Kopf hängend */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 8px;
+    height: 4px;
+    background: #fff;
+    border-radius: 0 0 4px 4px;
+    opacity: 0.3;
+    transition: all 0.5s ease;
+    box-shadow: 0 0 0 rgba(255, 235, 59, 0);
+}
+
+/* BERG (Hintergrund Kunstwerk) */
+.mountain {
+    position: absolute;
+    bottom: 40px; /* Beginnt über der Straße */
+    left: 20%; /* Versetzt, damit es nicht vom Main Screen verdeckt wird */
+    transform: translateX(-50%);
+    width: 400px; /* Kleiner */
+    height: 200px;
+    background: linear-gradient(180deg, #546e7a 0%, #263238 100%);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    z-index: 1; /* Hinter den Häusern */
+}
+
+/* Der Schnee-Effekt (Modern & Realistisch) */
+.mountain-snow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, #ffffff 30%, rgba(255,255,255,0.8) 60%, transparent 100%);
+    transform-origin: top;
+    transform: scaleY(0); /* Startet ohne Schnee */
+    transition: transform 15s ease-in-out; /* Sehr langsames, realistisches Ansammeln */
+    opacity: 0.9;
+}
+
+/* PFÜTZE */
+.puddle {
+    position: absolute;
+    /* Top wird jetzt per JS gesetzt für Variation */
+    transform: translate(-50%, -50%) scale(0);
+    height: 6px;
+    background: rgba(33, 150, 243, 0.3);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 8s ease, transform 8s ease; /* Sehr langsames Verdunsten (Standardzustand) */
+    box-shadow: 0 0 5px rgba(33, 150, 243, 0.2);
+}
+
+/* SCHNEEFELDER (Neu) */
+.snow-patch {
+    position: absolute;
+    transform: translate(-50%, -50%) scale(0);
+    height: 5px;
+    background: #fff;
+    opacity: 0;
+    transition: opacity 5s ease, transform 15s cubic-bezier(0.2, 0.8, 0.2, 1); /* Langsames Anhäufen */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    z-index: 6; /* Über der Straße */
+    border-radius: 50%; /* Basis */
+}
+
+/* Organische Formen für natürlicheren Look */
+.snow-patch:nth-child(2n) { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+.snow-patch:nth-child(3n) { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+.snow-patch:nth-child(5n) { border-radius: 50% 50% 20% 80% / 25% 80% 20% 75%; }
+
+
+/* Ripple Effekte (Wellen) für Regen */
+.puddle::before,
+.puddle::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0; height: 0;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    opacity: 0;
+}
+
+/* --- STADT ZUSTÄNDE --- */
+
+/* 1. SONNIG: Warm, hell, Lichtkanten */
+.theme-sunny .city-scape {
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));
+}
+
+/* 2. BEWÖLKT: Gedämpft, grau, flach */
+.theme-cloudy .city-scape {
+    filter: grayscale(0.3) contrast(0.9);
+}
+
+/* 3. REGEN: Dunkel, Spiegelung, nass */
+.theme-rain .city-scape {
+    filter: brightness(0.9);
+    /* Spiegelung auf nasser Straße */
+    -webkit-box-reflect: below 2px linear-gradient(transparent, rgba(0,0,0,0.2));
+}
+.theme-rain .puddle {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    transition: opacity 1s ease, transform 2s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Schnelles Entstehen bei Regen */
+}
+/* Aktiviere Ripple Animation nur bei Regen */
+.theme-rain .puddle::before {
+    animation: rippleEffect 2s linear infinite;
+}
+.theme-rain .puddle::after {
+    animation: rippleEffect 2s linear infinite 1s; /* Versetzt */
+}
+
+/* 4. STARKREGEN / GEWITTER: Düster, kühl, angespannt */
+.theme-storm .city-scape {
+    filter: contrast(1.1) brightness(0.8);
+    -webkit-box-reflect: below 2px linear-gradient(transparent, rgba(0,0,0,0.3));
+}
+.theme-storm .puddle {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+    transition: opacity 1s ease, transform 2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.theme-storm .puddle::before, 
+.theme-storm .puddle::after {
+    animation-duration: 1s; /* Schnellere Wellen bei Sturm */
+}
+
+/* 5. NEBEL: Silhouetten, unscharf, Tiefe fehlt */
+.theme-fog .city-scape {
+    filter: blur(2px) opacity(0.8) grayscale(0.5);
+}
+/* Lampen an bei Nebel */
+.theme-fog .lamp-light {
+    opacity: 1;
+    background: #ffeb3b;
+    box-shadow: 0 0 15px #ffeb3b;
+}
+.theme-fog .street-lamp::before {
+    opacity: 0.6; /* Leichter Bodenschein bei Nebel */
+}
+.theme-fog .light-cone {
+    opacity: 0.5; /* Sichtbarer Lichtkegel im Nebel */
+}
+
+/* 6. SCHNEE: Weich, monochrom, weiße Dächer */
+.theme-snow .city-scape {
+    filter: brightness(1.05);
+}
+.theme-snow .snow-layer {
+    opacity: 1;
+    transform: scaleY(1); /* Schnee hat sich angesammelt */
+}
+/* NEU: Schnee bleibt auf der Straße liegen */
+.theme-snow .snow-patch {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+/* Berg reagiert auf Schnee */
+.theme-snow .mountain-snow {
+    transform: scaleY(0.6); /* Bedeckt die oberen 60% des Berges */
+}
+
+/* 7. NACHT / KLAR: Dunkel, warme Lichtpunkte */
+.theme-night .city-scape {
+    filter: brightness(0.6) contrast(1.1);
+}
+/* Lampen an bei Nacht */
+.theme-night .lamp-light,
+.theme-storm .lamp-light {
+    opacity: 1;
+    background: #ffeb3b;
+    box-shadow: 0 0 20px #ffeb3b, 0 0 40px rgba(255, 235, 59, 0.4);
+}
+.theme-night .street-lamp::before,
+.theme-storm .street-lamp::before {
+    opacity: 1; /* Bodenschein an */
+}
+.theme-night .light-cone,
+.theme-storm .light-cone {
+    opacity: 0.8; /* Lichtkegel sichtbar */
+}
+
+/* 8. WINDIG: Dynamik */
+.theme-windy .city-scape {
+    transform: skewX(1deg); /* Häuser neigen sich minimal im Wind */
+}
+
+/* MORGENROT / ABENDROT (Zusatz) */
+.theme-dawn .city-scape, .theme-dusk .city-scape {
+    filter: sepia(0.3) saturate(1.1);
+}
+
+/* Animation Keyframes für Wasserwellen */
+@keyframes rippleEffect {
+    0% { width: 0; height: 0; opacity: 0.8; border-width: 2px; }
+    100% { width: 100%; height: 100%; opacity: 0; border-width: 0px; }
+}
+
+@keyframes flickerLights {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 0.9; }
+}
+
+/* Rauch Animation Keyframes */
+@keyframes smokeRise {
+    0% { opacity: 0; transform: translateX(-50%) scale(0.5); bottom: 100%; }
+    20% { opacity: 0.6; }
+    100% { opacity: 0; transform: translateX(-20%) scale(2.5); bottom: 250%; }
+}
+
+/* DATENQUELLE HINWEIS */
+.data-source {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    z-index: 100;
+    font-weight: 300;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    pointer-events: auto;
+}
+.data-source a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
+    transition: color 0.3s;
+}
+.data-source a:hover {
+    color: #fff;
+}
+
+/* Responsive Anpassung für kleine Screens */
+@media (max-width: 600px) {
+    body {
+        /* Auf Mobile erlauben wir Scrollen, falls Elemente zu hoch sind */
+        height: auto;
+        min-height: 100vh;
+        min-height: 100dvh; /* Verhindert Springen bei mobiler Adressleiste */
+        overflow-y: auto;
+        overflow-x: hidden;
+        align-items: flex-start;
+        justify-content: center;
+        /* Safe Area Insets für Notches (iPhone X etc.) */
+        padding-top: max(40px, env(safe-area-inset-top));
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+    
+    /* Karte schwebend und elegant */
+    .weather-card {
+        width: 90%;
+        max-width: none;
+        margin-bottom: 200px; /* Platz für das Kunstwerk unten */
+        padding: 1.5rem;
+        backdrop-filter: blur(20px); /* Stärkerer Blur für Lesbarkeit */
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    /* Schriftgrößen anpassen */
+    .temp-container {
+        font-size: 4rem;
+    }
+    .main-icon {
+        font-size: 4rem;
+    }
+
+    /* Forecast Scroll-Verhalten verbessern */
+    .forecast-container {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 10px;
+    }
+    .forecast-item {
+        scroll-snap-align: center;
+        min-width: 70px;
+    }
+
+    /* Buttons fingerfreundlicher */
+    .refresh-btn {
+        width: 100%;
+        margin-bottom: 15px;
+        padding: 12px;
+    }
+    .test-btn {
+        padding: 12px;
+        margin: 5px;
+    }
+
+    /* Das Stadtbild als festes Kunstwerk am Boden */
+    .city-scape {
+        position: fixed; /* Fixiert am Viewport-Boden */
+        bottom: 0;
+        left: 0;
+        height: 180px; /* Kompakter für Mobile */
+        width: 100%;
+        gap: 2px; /* Häuser sehr nah beieinander */
+        z-index: -1; /* Hinter dem Scroll-Content */
+        pointer-events: none;
+    }
+
+    /* Häuser kleiner und niedlicher */
+    .house {
+        transform: scale(0.45);
+        transform-origin: bottom;
+        margin: 0 -15px; /* Überlappung für Dichte */
+    }
+
+    /* Berg dominant im Hintergrund */
+    .mountain {
+        width: 180%; /* Sehr breit für flache Optik */
+        left: 50%;
+        height: 140px; /* Reduziert */
+        bottom: 35px; /* Passend zur Straße */
+    }
+
+    /* Straße proportional */
+    .street {
+        height: 40px;
+    }
+    
+    /* Sonne/Mond anpassen */
+    .sun {
+        width: 45px;
+        height: 45px;
+        top: auto !important;
+        bottom: 140px !important; /* Höher gesetzt, damit sie nicht vom Berg verdeckt wird */
+        right: 8% !important;
+        left: auto !important; /* Überschreibt JS-Animation auf Mobile */
+    }
+    .moon {
+        font-size: 40px;
+        top: auto !important;
+        bottom: 140px !important;
+        right: 8% !important;
+    }
+
+    /* Datenquelle oben rechts, klein */
+    .data-source {
+        top: 15px;
+        right: 15px;
+        font-size: 0.6rem;
+        opacity: 0.7;
+    }
+}
+
+/* Landscape Mode (Handy quer) */
+@media (max-height: 500px) and (orientation: landscape) {
+    .city-scape {
+        display: none; /* Platz sparen */
+    }
+    .weather-card {
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+    body {
+        padding-top: 10px;
+    }
+}

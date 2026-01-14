@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Mein Wetter</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div id="app-background" class="background-layer"></div>
+    <div id="celestial-container" class="celestial-layer"></div>
+    
+    <div id="city-scape" class="city-scape">
+        <div class="building type-1"></div>
+        <div class="building type-2"></div>
+        <div class="building type-3"></div>
+        <div class="building type-1"></div>
+        <div class="building type-4"></div>
+    </div>
+
+    <div id="particles" class="particles-layer"></div>
+
+    <div class="weather-card">
+        <div class="header">
+            <h1>Aktuelles Wetter</h1>
+            <p id="location-status">Standort wird ermittelt...</p>
+        </div>
+
+        <div id="weather-data" class="weather-info hidden">
+            <div id="weather-icon" class="main-icon"></div>
+            <div class="temp-container">
+                <span id="temperature">--</span><span class="unit">°C</span>
+            </div>
+            <p id="description" class="description">--</p>
+            
+            <div class="details">
+                <div class="detail-item">
+                    <div class="windmill-container">
+                        <div class="pole"></div>
+                        <div id="windmill-blades" class="blades">
+                            <div class="hub"></div>
+                            <div class="blade"></div>
+                            <div class="blade"></div>
+                            <div class="blade"></div>
+                        </div>
+                    </div>
+                    <div class="wind-info">
+                        <span class="label">Wind</span>
+                        <span id="wind">-- km/h</span>
+                    </div>
+                </div>
+                <!-- Open-Meteo liefert standardmäßig keine Luftfeuchtigkeit✂️  -->
+ --
+            </div>
+        </div>
+
+        <div id="hourly-forecast" class="hourly-container hidden"></div>
+
+        <div id="forecast" class="forecast-container hidden"></div>
+
+        <div id="error-msg" class="error hidden">
+            Standortzugriff verweigert oder nicht verfügbar.
+        </div>
+
+        <button onclick="getLocation()" class="refresh-btn">Aktualisieren</button>
+        <button onclick="testScenarios()" class="test-btn" title="Design testen"><i class="fa-solid fa-flask"></i></button>
+        <button onclick="forceDay()" class="test-btn" title="Tag simulieren"><i class="fa-solid fa-sun"></i></button>
+        <button onclick="forceNight()" class="test-btn" title="Nacht simulieren"><i class="fa-solid fa-moon"></i></button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
