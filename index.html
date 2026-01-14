@@ -73,7 +73,6 @@
         <div class="controls-row">
             <button onclick="getLocation()" class="refresh-btn">Aktualisieren</button>
             <button onclick="toggleLandscapeMode()" class="icon-btn" title="Nur Landschaft ansehen"><i class="fa-solid fa-eye"></i></button>
-            <button onclick="handleSettingsClick()" class="icon-btn" id="admin-btn" title="Admin Login"><i class="fa-solid fa-lock"></i></button>
         </div>
 
         <div id="debug-menu" class="debug-menu hidden">
@@ -86,15 +85,35 @@
 
     <!-- Login Modal -->
     <div id="login-modal" class="modal hidden">
-        <div class="modal-content">
-            <h2>Admin Login</h2>
-            <input type="email" id="login-email" placeholder="Email Adresse">
-            <input type="password" id="login-password" placeholder="Passwort">
+        <div class="modal-content secret-modal">
+            <div class="secret-icon">
+                <!-- Spion SVG -->
+                <svg class="spy-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g class="spy-hat">
+                        <path d="M20 35 H80 L70 10 H30 L20 35 Z" fill="currentColor" />
+                        <rect x="10" y="35" width="80" height="10" rx="2" fill="currentColor" />
+                    </g>
+                    <g class="spy-glasses">
+                        <circle cx="35" cy="60" r="12" fill="#1e293b" stroke="currentColor" stroke-width="3"/>
+                        <circle cx="65" cy="60" r="12" fill="#1e293b" stroke="currentColor" stroke-width="3"/>
+                        <line x1="47" y1="60" x2="53" y2="60" stroke="currentColor" stroke-width="3"/>
+                    </g>
+                </svg>
+            </div>
+            <h2>Top Secret Area 51</h2>
+            <p class="secret-text">Zutritt nur für Spezialagenten.</p>
+            <input type="email" id="login-email" placeholder="Codename">
+            <input type="password" id="login-password" placeholder="Zugriffscode">
             <div class="modal-buttons">
-                <button onclick="performLogin()" class="refresh-btn">Anmelden</button>
-                <button onclick="closeLoginModal()" class="refresh-btn cancel-btn">Abbrechen</button>
+                <button onclick="performLogin()" class="refresh-btn">Infiltrieren</button>
+                <button onclick="closeLoginModal()" class="refresh-btn cancel-btn">Flüchten</button>
             </div>
             <p id="login-error" class="error-text"></p>
+            
+            <div class="destruct-container">
+                <input type="text" id="destruct-code" placeholder="Selbstzerstörungscode (RESET)">
+                <button onclick="checkSelfDestruct()" class="destruct-btn" title="Auslösen">💥</button>
+            </div>
         </div>
     </div>
 

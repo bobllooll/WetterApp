@@ -356,7 +356,7 @@ function setTheme(code, isDay, moonPhase = 0.5, sunriseStr = null, sunsetStr = n
     if (isDay === 0) {
         body.classList.add('theme-night');
         const moonChar = getMoonPhaseIcon(moonPhase);
-        celestial.innerHTML = `<div class="moon">${moonChar}</div>`;
+        celestial.innerHTML = `<div class="moon" onclick="handleSettingsClick()">${moonChar}</div>`;
         if(city) city.classList.add('lights-on');
     } else {
         body.classList.add('theme-sunny');
@@ -381,7 +381,7 @@ function setTheme(code, isDay, moonPhase = 0.5, sunriseStr = null, sunsetStr = n
             sunStyle = `style="left: ${leftPos}%; bottom: ${bottomPos}%; top: auto; right: auto;"`;
         }
         
-        celestial.innerHTML = `<div class="sun" ${sunStyle}></div>`;
+        celestial.innerHTML = `<div class="sun" ${sunStyle} onclick="handleSettingsClick()"></div>`;
         if(city) city.classList.remove('lights-on');
     }
 
@@ -844,23 +844,9 @@ let authUser = null;
 function initAuthObserver() {
     firebase.auth().onAuthStateChanged((user) => {
         authUser = user;
-        const adminBtn = document.getElementById('admin-btn');
-        const icon = adminBtn ? adminBtn.querySelector('i') : null;
         
-        if (user) {
-            // Eingeloggt: Icon zu "offen" ändern und grün färben
-            if(icon) {
-                icon.className = "fa-solid fa-unlock";
-                icon.style.color = "#4ade80";
-            }
-            if(adminBtn) adminBtn.title = "Admin Menü";
-        } else {
-            // Ausgeloggt: Icon zu "Schloss" ändern
-            if(icon) {
-                icon.className = "fa-solid fa-lock";
-                icon.style.color = "";
-            }
-            if(adminBtn) adminBtn.title = "Admin Login";
+        if (!user) {
+            // Ausgeloggt: Menü schließen falls offen
             document.getElementById('debug-menu').classList.add('hidden');
         }
     });
@@ -898,7 +884,7 @@ function performLogin() {
     const errorText = document.getElementById('login-error');
 
     if (!email || !password) {
-        errorText.textContent = "Bitte Email und Passwort eingeben.";
+        errorText.textContent = "Bitte Codename und Zugriffscode eingeben.";
         return;
     }
 
@@ -908,14 +894,50 @@ function performLogin() {
         .then((userCredential) => {
             closeLoginModal();
             toggleDebugMenu(); // Menü direkt öffnen
+            triggerLoginSuccessAnimation();
         })
         .catch((error) => {
-            errorText.textContent = "Fehler: " + error.message;
+            errorText.textContent = "Zugriff verweigert: Identität nicht bestätigt.";
         });
 }
 
 function logout() {
     firebase.auth().signOut();
+}
+
+function triggerLoginSuccessAnimation() {
+    const celestial = document.querySelector('.sun') || document.querySelector('.moon');
+    if (celestial) {
+        celestial.classList.add('login-success-anim');
+        setTimeout(() => {
+            celestial.classList.remove('login-success-anim');
+        }, 1500);
+    }
+}
+
+function checkSelfDestruct() {
+    const codeInput = document.getElementById('destruct-code');
+    const code = codeInput.value.trim().toUpperCase();
+    
+    if (code === "RESET") {
+        const btn = document.querySelector('.destruct-btn');
+        let count = 3;
+        btn.textContent = count;
+        
+        const timer = setInterval(() => {
+            count--;
+            if (count > 0) {
+                btn.textContent = count;
+            } else {
+                clearInterval(timer);
+                document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:black;color:red;font-family:sans-serif;font-size:3rem;font-weight:bold;">💥 BOOM 💥</div>';
+                setTimeout(() => window.location.href = "https://wetter.hanneken.cloud", 1000);
+            }
+        }, 1000);
+    } else {
+        codeInput.style.borderColor = "red";
+        setTimeout(() => codeInput.style.borderColor = "", 500);
+    }
 }
 
 // Landschaftsmodus umschalten

@@ -28,7 +28,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -10; /* Ganz hinten */
+    z-index: 0; /* Basis Ebene */
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     transition: background 1s ease;
 }
@@ -39,7 +39,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -4;
+    z-index: 2; /* Hinter der Stadt, aber vor Hintergrund */
     pointer-events: none;
     transition: opacity 1s ease, filter 1s ease;
 }
@@ -50,7 +50,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -9; /* Vor dem Hintergrund, aber hinter Stadt (-3) und Celestial (-4) */
+    z-index: 1; /* Zwischen Hintergrund und Himmelskörpern */
     pointer-events: none;
 }
 
@@ -60,7 +60,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 0;
+    z-index: 4; /* Vor der Stadt (Regen fällt vor Häusern) */
     pointer-events: none;
     overflow: hidden;
 }
@@ -76,6 +76,7 @@ body {
     text-align: center;
     width: 90%;
     max-width: 350px;
+    z-index: 10; /* Wichtig: Über allen Layern */
     transition: transform 0.3s ease;
     animation: floatCard 6s ease-in-out infinite;
     position: relative; /* Damit die Uhrzeit absolut darin positioniert werden kann */
@@ -377,7 +378,7 @@ body {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 @keyframes fadeIn {
@@ -608,6 +609,8 @@ body.landscape-mode .data-source {
     box-shadow: 0 0 40px rgba(255, 235, 59, 0.6), 0 0 80px rgba(255, 193, 7, 0.4);
     animation: sunGlow 5s infinite alternate ease-in-out;
     transition: left 1s linear, bottom 1s linear; /* Weiche Bewegung */
+    pointer-events: auto;
+    cursor: pointer;
 }
 
 /* Sonne am Morgen (rötlicher) */
@@ -638,6 +641,8 @@ body.landscape-mode .data-source {
     animation: moonFloat 6s ease-in-out infinite alternate;
     opacity: 0.9;
     user-select: none;
+    pointer-events: auto;
+    cursor: pointer;
 }
 
 @keyframes moonFloat {
@@ -656,7 +661,7 @@ body.landscape-mode .data-source {
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    z-index: -3;
+    z-index: 3; /* Vor Himmelskörpern, hinter Partikeln */
     pointer-events: none;
     padding-bottom: 0;
     transition: filter 1s ease, opacity 1s ease, transform 1s ease;
@@ -1167,7 +1172,7 @@ body.landscape-mode .data-source {
         height: 180px; /* Kompakter für Mobile */
         width: 100%;
         gap: 2px; /* Häuser sehr nah beieinander */
-        z-index: -1; /* Hinter dem Scroll-Content */
+        z-index: 3; /* Vor Himmelskörpern, hinter Partikeln */
         pointer-events: none;
     }
 
@@ -1195,17 +1200,18 @@ body.landscape-mode .data-source {
     .sun {
         width: 45px;
         height: 45px;
-        top: auto !important;
-        bottom: 180px !important; /* Deutlich höher, damit sie frei über dem Berg steht */
-        right: 5% !important; /* Weiter am Rand */
-        left: auto !important; /* Überschreibt JS-Animation auf Mobile */
-    }
-    .moon {
-        font-size: 40px;
+        pointer-events: none;
         top: auto !important;
         bottom: 180px !important;
         right: 5% !important;
-        animation: none !important; /* Kein Wackeln (Hoch/Runter) auf Mobile */
+        left: auto !important;
+    }
+    .moon {
+        font-size: 40px;
+        pointer-events: none;
+        top: auto !important;
+        bottom: 180px !important;
+        right: 5% !important;
     }
 
     /* Datenquelle oben rechts, klein */
@@ -1255,6 +1261,49 @@ body.landscape-mode .data-source {
     width: 85%;
     max-width: 320px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Easter Egg Style Overrides */
+.secret-modal {
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+    animation: alarmBg 4s infinite ease-in-out;
+}
+
+.secret-icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+    animation: floatSecret 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
+    color: #fff; /* Färbt den Hut weiß */
+}
+
+.spy-svg {
+    width: 80px;
+    height: 80px;
+}
+
+.spy-glasses {
+    animation: spyLook 5s infinite;
+    transform-origin: center;
+}
+
+@keyframes spyLook {
+    0%, 100% { transform: translateY(0); }
+    40% { transform: translateY(3px); } /* Brille rutscht kurz runter */
+    50% { transform: translateY(3px) rotate(-5deg); } /* Schaut links */
+    60% { transform: translateY(3px) rotate(5deg); } /* Schaut rechts */
+    70% { transform: translateY(0); }
+}
+
+.secret-text {
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+    margin-bottom: 20px;
 }
 
 .modal-content input {
@@ -1290,4 +1339,51 @@ body.landscape-mode .data-source {
     font-size: 0.85rem;
     margin-top: 15px;
     min-height: 1.2em;
+}
+
+/* --- LOGIN SUCCESS ANIMATION --- */
+.login-success-anim {
+    animation: successPulse 1.5s ease-out !important;
+}
+
+@keyframes successPulse {
+    0% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 0 rgba(255,255,255,0)); }
+    50% { transform: scale(1.3); filter: brightness(2) drop-shadow(0 0 50px rgba(74, 222, 128, 0.8)); } /* Grüner Glow */
+    100% { transform: scale(1); filter: brightness(1) drop-shadow(0 0 0 rgba(255,255,255,0)); }
+}
+
+@keyframes floatSecret {
+    0%, 100% { transform: translateY(0) rotate(-10deg); }
+    50% { transform: translateY(-10px) rotate(10deg); }
+}
+
+@keyframes alarmBg {
+    0% { background: rgba(15, 23, 42, 0.95); box-shadow: 0 0 50px rgba(0, 0, 0, 0.8); border-color: rgba(255, 255, 255, 0.1); }
+    50% { background: rgba(60, 10, 10, 0.95); box-shadow: 0 0 60px rgba(255, 0, 0, 0.4); border-color: rgba(255, 50, 50, 0.5); }
+    100% { background: rgba(15, 23, 42, 0.95); box-shadow: 0 0 50px rgba(0, 0, 0, 0.8); border-color: rgba(255, 255, 255, 0.1); }
+}
+
+.destruct-container {
+    margin-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 15px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.destruct-btn {
+    background: rgba(255, 50, 50, 0.15);
+    border: 1px solid rgba(255, 50, 50, 0.5);
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0 15px;
+    height: 46px; /* Gleiche Höhe wie Input */
+    transition: all 0.3s;
+}
+
+.destruct-btn:hover {
+    background: rgba(255, 0, 0, 0.6);
+    transform: scale(1.05);
 }
